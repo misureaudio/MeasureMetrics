@@ -1,0 +1,15 @@
+import sympy as sp
+x, y, z = sp.symbols('x y z')
+f = sp.Function('f')
+F = f(x, y, z)
+# Convention: group law (x,y,z).(x',y',z') = (x+x',y+y',z+z'+(x y'-x' y)/2)
+# left-invariant horizontal fields: X = d_x - (y/2) d_z, Y = d_y + (x/2) d_z
+dX = lambda g: sp.diff(g, x) - (y/2)*sp.diff(g, z)
+dY = lambda g: sp.diff(g, y) + (x/2)*sp.diff(g, z)
+LH = sp.expand(dX(dX(F)) + dY(dY(F)))
+print("Delta_H f (fixed convention) =", LH)
+print("coeff f_zz :", LH.coeff(sp.diff(F, z, 2)))
+print("coeff f_xz :", LH.coeff(sp.diff(F, x, z)))
+print("coeff f_yz :", LH.coeff(sp.diff(F, y, z)))
+comm = sp.expand(dX(dY(F)) - dY(dX(F)))
+print("[X,Y] f =", comm, "  (expect + f_z = T)")
